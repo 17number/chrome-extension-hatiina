@@ -1,0 +1,40 @@
+{
+  "manifest_version": 2,
+  "name": "Hatiina",
+  "description": "Qiitaにはてなブックマークのブックマークコメントを追加表示する拡張機能。",
+  "homepage_url": "https://r17n.page",
+  "version": "1.0.0",
+  "icons": {
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://qiita.com/*/items*"
+      ],
+      "js": [
+        "js/chunk-vendors.js",
+        "js/app.js"
+      ],
+      "css": [
+        "css/app.css"
+      ]
+    }
+  ],
+  "background": {
+    "scripts": [
+      "js/background.umd.js"
+    ],
+    "persistent": true
+  },
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "activeTab",
+    "https://qiita.com/*/items*",
+    "https://b.hatena.ne.jp/*",
+    "https://s.hatena.com/*"
+  ]
+}
