@@ -15,14 +15,8 @@ browser.runtime.onMessage.addListener(async (message, sender, callback) => {
       result = {data: res};
       break;
 
-    case `GET_ENTRY_INFO`:
-      res = await hatenaApi.getEntryInfo(message.url);
-      console.debug({res: res});
-      result = {data: res};
-      break;
-
-    case `COUNT_COMMENT_STARS`:
-      res = await hatenaApi.countStars(message.date, message.user, message.eid);
+    case `FETCH_COMMENTS_STARS`:
+      res = await hatenaApi.countsStars(message.urls);
       console.debug({res: res});
       result = {data: res};
       break;

@@ -10,7 +10,7 @@ module.exports = {
       minimizer: [
         new TerserPlugin({
           terserOptions: {
-            ascii_only: false,
+            ascii_only: true,
             compress: true,
             mangle: true,
           },

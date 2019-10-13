@@ -34,6 +34,7 @@ import HatiinaBookmark from "@/components/HatiinaBookmark.vue";
 import HatiinaLoader from "@/components/HatiinaLoader.vue";
 const browser = require("webextension-polyfill");
 const moment = require("moment-timezone");
+
 export default {
   name: "Hatiina",
   components: {
@@ -60,28 +61,51 @@ export default {
       if (bookmarks.length) {
         this.eid = bookmarks[0].location_id;
       }
-      await this.countStars(bookmarks);
+      await this.countsStars(bookmarks);
     },
-    async countStars(bookmarks) {
-      this.bookmarks = await Promise.all(bookmarks.map(async bookmark => {
+    async countsStars(bookmarks) {
+      let urls = "";
+      let promises = [];
+      bookmarks.forEach(async bookmark => {
         const date = moment(bookmark.created).tz("Asia/Tokyo").format("YYYYMMDD");
-        const res = await browser.runtime.sendMessage({
-          type: `COUNT_COMMENT_STARS`,
-          date: date,
-          user: bookmark.user.name,
-          eid: this.eid,
-        });
-
-        return {
+        this.bookmarks.push({
           name: bookmark.user.name,
           image: bookmark.user.image.image_url,
           comment: bookmark.comment,
           date: date,
           dateReadable: moment(bookmark.created).tz("Asia/Tokyo").format("YYYY/MM/DD HH:mm"),
-          stars: res.data,
-        };
-      }));
-      this.loading = false;
+          stars: {normal: 0, red: 0, green: 0, blue: 0, total: 0},
+        })
+
+        const uri = `https://b.hatena.ne.jp/${bookmark.user.name}/${date}#bookmark-${this.eid}`;
+        urls += `&uri=${encodeURIComponent(uri)}`;
+        // API request の URL 最大長が 8196 まで(ぽい)
+        if (urls.length >= 8000) {
+          promises.push(this.fetchStars(urls));
+          urls = "";
+        }
+      });
+      promises.push(this.fetchStars(urls));
+      await Promise.all(promises);
+    },
+    async fetchStars(urls) {
+      const res = await browser.runtime.sendMessage({
+        type: `FETCH_COMMENTS_STARS`,
+        urls: urls,
+      });
+      res.data.data.entries.forEach(entry => {
+        const user = entry.uri.replace("https://b.hatena.ne.jp/", "").split("/")[0];
+        let b = this.bookmarks.filter(bookmark => bookmark.name === user)[0];
+        b.stars.normal = entry.stars.length;
+        b.stars.total += b.stars.normal;
+        if (!entry.colored_stars) {
+          return;
+        }
+        entry.colored_stars.forEach(coloredStar => {
+          b.stars[coloredStar.color] = coloredStar.stars.length;
+          b.stars.total += coloredStar.stars.length;
+        })
+      });
     }
   },
   async created() {
