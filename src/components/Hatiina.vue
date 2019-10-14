@@ -87,6 +87,7 @@ export default {
       });
       promises.push(this.fetchStars(urls));
       await Promise.all(promises);
+      this.loading = false;
     },
     async fetchStars(urls) {
       const res = await browser.runtime.sendMessage({
