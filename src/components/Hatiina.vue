@@ -85,7 +85,9 @@ export default {
           urls = "";
         }
       });
-      promises.push(this.fetchStars(urls));
+      if (urls.length) {
+        promises.push(this.fetchStars(urls));
+      }
       await Promise.all(promises);
       this.loading = false;
     },

@@ -3,7 +3,7 @@
   "name": "Hatiina",
   "description": "Qiitaにはてなブックマークのブックマークコメントを追加表示する拡張機能。",
   "homepage_url": "https://r17n.page",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "icons": {
     "16": "icons/16.png",
     "48": "icons/48.png",
