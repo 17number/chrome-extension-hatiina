@@ -31,12 +31,14 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 (() => {
   'use strict';
 
-  document
-    .querySelector(".p-items > .p-items_container > .p-items_main")
-    .insertAdjacentHTML(
-      `afterBegin`,
-      `<div id="hatiina"></div>`
-    );
+  let targetEle = document.querySelector(".p-items > .p-items_container > .p-items_main");
+  if (!targetEle) {
+    targetEle = document.querySelector("div.p-items_wrapper.p-items_wrapper-white > div > div.p-items_main");
+  }
+  targetEle.insertAdjacentHTML(
+    `afterBegin`,
+    `<div id="hatiina"></div>`
+  );
 
   // FontAwesome Setup
   library.add(faBookmark)
