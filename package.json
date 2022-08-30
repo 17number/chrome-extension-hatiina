@@ -38,7 +38,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.7",
     "axios": "^0.21.1",
     "crx-hotreload": "^1.0.4",
-    "moment-timezone": "^0.5.26",
+    "moment-timezone": "^0.5.35",
     "vue": "^2.6.10",
     "webextension-polyfill": "^0.5.0"
   },
